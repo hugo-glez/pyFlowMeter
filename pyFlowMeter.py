@@ -41,6 +41,7 @@ import communityid
 
 #Auxiliar classes
 import BasicFlow as bf
+import packethelper as ph
 
 FinishedFlows = defaultdict(dict)
 ActualFlows = defaultdict(dict)
@@ -135,7 +136,8 @@ class PcapIterator(object):
 
         #self._print_result(tstamp, pkt, self._commid.calc(tpl))
         #Check Flags, 
-        
+        flags = ph.getFlags(pkt)
+                
         
         #add packet to a flow
         cid = self._commid.calc(tpl)

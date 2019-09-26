@@ -21,6 +21,8 @@ from dpkt.sctp import SCTP #pylint: disable=import-error
 import numpy as np
 
 import communityid
+import packethelper as ph
+
 
 intvalues = "fwPackets,\
 bwPackets,\
@@ -69,6 +71,10 @@ def InitFlow( cid,tstamp,tpl,pkt):
     newFlow['bwlastseen'] = -1
     #for sv in stringvalues.split(','):
     #    newFlow[sv] = ''
+    
+    for fl in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        newFlow[fl] = 0
+    
     for iv in intvalues.split(','):
         newFlow[iv] = 0
     
@@ -112,6 +118,10 @@ def FlowUpdate(newFlow, tstamp,tpl,pkt) :
     newFlow['flIAT'] = np.append(newFlow['flIAT'],tstamp - newFlow['lastseen'])
     newFlow['lastseen'] = tstamp
     
+    flags = ph.getFlags(pkt)
+    for fl in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        newFlow[fl] += flags[fl]
+        
 
 def printHeaders():
     """ Print the headers for the features """
@@ -125,7 +135,8 @@ def printHeaders():
         strs += kv+"_mean,"
         strs += kv+"_median,"
         strs += kv+"_std,"
-    
+    for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        strs += kv + ','
 
 def printFlow(Flow):
     strs = ''
@@ -141,4 +152,6 @@ def printFlow(Flow):
             strs += str(np.std(Flow[kv])) + ','
         else:
             strs += "0.0,"*6
+    for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        strs += str(Flow[kv]) + ','
     print(strs)
