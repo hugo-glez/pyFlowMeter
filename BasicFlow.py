@@ -46,7 +46,7 @@ sport,\
 dport,\
 proto,\
 fwPackets,\
-bwPackets,\
+bwPackets\
 "   
 
 
@@ -137,6 +137,7 @@ def printHeaders():
         strs += kv+"_std,"
     for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         strs += kv + ','
+    print (strs)
 
 def printFlow(Flow):
     strs = ''
