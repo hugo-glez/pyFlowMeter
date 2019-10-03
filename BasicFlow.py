@@ -24,6 +24,11 @@ import communityid
 import packethelper as ph
 
 
+#Values from tcp packets that could be of interes
+#seq
+#win
+#offset
+
 intvalues = "fwPackets,\
 bwPackets,\
 "   
@@ -74,6 +79,8 @@ def InitFlow( cid,tstamp,tpl,pkt):
     
     for fl in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         newFlow[fl] = 0
+        newFlow['ff'+fl] = 0
+        newFlow['bf'+fl] = 0
     
     for iv in intvalues.split(','):
         newFlow[iv] = 0
@@ -100,11 +107,14 @@ def FlowUpdate(newFlow, tstamp,tpl,pkt) :
             daddr = pkt[IP6].dst
             leng =  pkt[IP6].plen
     
+    flags = ph.getFlags(pkt)
     if newFlow['orig'] == saddr:
         newFlow['fwPackets'] += 1
         newFlow['fwSize'] = np.append(newFlow['fwSize'], leng)
         newFlow['fwIAT'] = np.append(newFlow['fwIAT'],tstamp - newFlow['fwlastseen'])
         newFlow['fwlastseen'] = tstamp
+        for fl in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+            newFlow['ff'+fl] += flags[fl]
     else:
         newFlow['bwPackets'] += 1
         newFlow['bwSize'] = np.append(newFlow['bwSize'],leng)
@@ -113,12 +123,13 @@ def FlowUpdate(newFlow, tstamp,tpl,pkt) :
         else:
            newFlow['bwlastseen'] = tstamp
         newFlow['bwlastseen'] = tstamp    
+        for fl in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+            newFlow['bf'+fl] += flags[fl]
     
     newFlow['flSize'] = np.append(newFlow['flSize'],leng)
     newFlow['flIAT'] = np.append(newFlow['flIAT'],tstamp - newFlow['lastseen'])
     newFlow['lastseen'] = tstamp
     
-    flags = ph.getFlags(pkt)
     for fl in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         newFlow[fl] += flags[fl]
         
