@@ -22,6 +22,7 @@ import numpy as np
 
 import communityid
 import packethelper as ph
+import labeler
 
 
 #Values from tcp packets that could be of interes
@@ -102,6 +103,8 @@ def InitFlow( cid,tstamp,tpl,pkt):
     
     for fv in npfvalues.split(','):
         newFlow[fv] = np.array([], dtype=np.float64)
+
+    newFlow['label'] = labeler.getLabel(cid)
     
     return newFlow
         
@@ -164,6 +167,7 @@ def printHeaders():
         strs += 'ff'+kv + ','
     for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         strs += 'bf'+kv + ','
+    strs += 'label'
     print (strs)
 
 def printFlow(Flow):
@@ -186,4 +190,5 @@ def printFlow(Flow):
         strs += str(Flow['ff'+kv]) + ','
     for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         strs += str(Flow['bf'+kv]) + ','
+    strs += str(Flow['label'])
     print(strs)
