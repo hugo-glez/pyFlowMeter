@@ -77,6 +77,18 @@ def InitFlow( cid,tstamp,tpl,pkt):
     #for sv in stringvalues.split(','):
     #    newFlow[sv] = ''
     
+    #Header bytes
+    #Packets per second
+    #Flow lenght
+    #DownUpRatio
+    #fAVGSegmentSize
+    #FAvgBytesPerBulk
+    #fAvgPacketsPerBulk
+    #fAvgBulkRate
+    #label
+
+
+    #Values of all flags, and forward and backward flags
     for fl in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         newFlow[fl] = 0
         newFlow['ff'+fl] = 0
@@ -148,6 +160,10 @@ def printHeaders():
         strs += kv+"_std,"
     for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         strs += kv + ','
+    for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        strs += 'ff'+kv + ','
+    for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        strs += 'bf'+kv + ','
     print (strs)
 
 def printFlow(Flow):
@@ -166,4 +182,8 @@ def printFlow(Flow):
             strs += "0.0,"*6
     for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         strs += str(Flow[kv]) + ','
+    for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        strs += str(Flow['ff'+kv]) + ','
+    for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
+        strs += str(Flow['bf'+kv]) + ','
     print(strs)
