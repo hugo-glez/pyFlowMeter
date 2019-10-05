@@ -238,6 +238,7 @@ def main():
         print (f'Good packets: {itr.GoodPackets}, Bad packets: {itr.BadPackets}')
         tflows = len(ActualFlows)
         print (f'Total flows generated {tflows}')
+        bf.printHeaders()
         for k,Flow in ActualFlows.items():
             bf.printFlow(Flow)
         
