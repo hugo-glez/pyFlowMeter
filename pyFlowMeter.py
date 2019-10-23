@@ -83,7 +83,7 @@ class PcapIterator(object):
         pkt = self._packet_parse(pktdata)
 
         if not pkt:
-            self._print_result(tstamp, pkt, '<not IP>')
+            #self._print_result(tstamp, pkt, '<not IP>')
             return "B"
 
         if IP in pkt:
