@@ -25,7 +25,6 @@ import packethelper as ph
 import labeler
 
 
-
 #Values from tcp packets that could be of interes
 #seq
 #win
@@ -175,7 +174,6 @@ def printHeaders():
     print (strs)
 
 def printFlow(Flow):
-    global FirstPacket
     strs = ''
     for kv in values.split(','):
         strs += str(Flow[kv]) + ','
