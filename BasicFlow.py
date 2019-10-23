@@ -25,6 +25,7 @@ import packethelper as ph
 import labeler
 
 
+
 #Values from tcp packets that could be of interes
 #seq
 #win
@@ -79,14 +80,10 @@ def InitFlow( cid,tstamp,tpl,pkt):
     #    newFlow[sv] = ''
     
     #Header bytes
-    #Packets per second
-    #Flow lenght
-    #DownUpRatio
     #fAVGSegmentSize
     #FAvgBytesPerBulk
     #fAvgPacketsPerBulk
     #fAvgBulkRate
-    #label
 
 
     #Values of all flags, and forward and backward flags
@@ -167,10 +164,18 @@ def printHeaders():
         strs += 'ff'+kv + ','
     for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         strs += 'bf'+kv + ','
+    #Packets per second
+    #Flow lenght
+    #DownUpRatio
+    strs += 'pktsXsec,'
+    strs += 'FlowLength,'
+    strs += 'DownUpRatio,'
+    strs += 'durationSecs,'
     strs += 'label'
     print (strs)
 
 def printFlow(Flow):
+    global FirstPacket
     strs = ''
     for kv in values.split(','):
         strs += str(Flow[kv]) + ','
@@ -190,5 +195,18 @@ def printFlow(Flow):
         strs += str(Flow['ff'+kv]) + ','
     for kv in ['fin','syn','rst','psh','ack','urg','ece','cwr']:
         strs += str(Flow['bf'+kv]) + ','
+    try:
+        strs += str(Flow['fwPackets']+Flow['bwPackets']*1.0/(Flow['lastseen']/1000-Flow['timestamp']/1000))+',' #'pktsXsec,'
+    except:
+        strs += '?,'
+    strs += str(np.sum(Flow['flSize'])*1.0/(np.sum(Flow['fwPackets'])+np.sum(Flow['bwPackets']))) + ',' #'FlowLength,'
+    try:
+        strs += str(np.sum(Flow['fwSize'])*1.0/np.sum(Flow['bwSize'])) + ',' #'DownUpRatio,'
+    except:
+        strs += '?,'
+    try:
+        strs += str((Flow['lastseen']/1000-Flow['timestamp']/1000))+',' #'durationSecs,'
+    except:
+        strs += '?,'
     strs += str(Flow['label'])
     print(strs)
