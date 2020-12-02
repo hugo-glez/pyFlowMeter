@@ -233,6 +233,7 @@ def main():
     BadPackets = 0
     
     for pcap in args.pcaps:
+        print ("Processing: ", pcap)
         itr = PcapIterator(commid, pcap)
         itr.process()
         print (f'Good packets: {itr.GoodPackets}, Bad packets: {itr.BadPackets}')
