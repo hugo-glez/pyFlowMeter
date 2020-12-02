@@ -10,14 +10,15 @@ This module is a helper to obtain info for labels
 labelArray = {}
 
 def loadLabels(lfile='labels.txt'):
-    #try:
+    try:
         with open(lfile,'r') as fs:
-            info = fs.read().split('/n')
+            info = fs.read().split('\n')
         for kv in info:
             k,v = kv.split(',')
             labelArray[k] = v
-    #except:
-    #    labelArray['n'] = 'a'
+    except:
+        #print (kv)
+        labelArray['n'] = 'a'
 
 
 def getLabel(cid):
